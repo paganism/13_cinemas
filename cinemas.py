@@ -73,7 +73,7 @@ def get_movie_rating(movie_title, proxies):
 
 
 def get_element(element):
-    return float(element[1])
+    return float(element[2])
 
 
 def output_movies_to_console_dict(movie_dict):
@@ -113,6 +113,6 @@ if __name__ == '__main__':
         movies = [movie, count_of_cinema, rating_ball, rating_count]
         # print(movies)
         movie_list.append(movies)
-    print(movie_list[0], movie_list[1], movie_list[2], movie_list[3])
+    #print(movie_list[0], movie_list[1], movie_list[2], movie_list[3])
     top = 10
     output_movies_to_console(movie_list, top)
