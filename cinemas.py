@@ -57,8 +57,8 @@ def fetch_movie_info(movie_title, proxies):
 
 
 def get_movie_rating(movie_title, proxies):
-    kp_url = 'https://www.kinopoisk.ru/index.php?first=yes&what=&kp_query='
-    payload = {'kp_query': movie_title}
+    kp_url = 'https://www.kinopoisk.ru/index.php'
+    payload = {'kp_query': movie_title, 'first': 'yes'}
     headers = {
         'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:45.0) '
@@ -105,7 +105,7 @@ def output_movies_to_console_dict(movie_dict):
 def output_movies_to_console(movie_list, top):
     sorted_list = sorted(movie_list, key=get_element, reverse=True)
     delimiter = '-' * 30
-    for title, cinemas, rating, votes in sorted_list[0:top]:
+    for title, cinemas, rating, votes in sorted_list[:top]:
         print(delimiter)
         print('Movie name: {}'.format(title))
         print('Count of cinemas: {}'.format(cinemas))
