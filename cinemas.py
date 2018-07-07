@@ -4,7 +4,7 @@ import re
 import random
 
 
-def fetch_proxy():
+def fetch_proxy_list():
     payload = {'anonymity': 'false', 'token': 'demo'}
     proxy_url = 'http://freeproxy-list.ru/api/proxy'
     proxy_list = requests.get(proxy_url, params=payload).text.split('\n')
@@ -12,8 +12,8 @@ def fetch_proxy():
 
 
 def fetch_afisha_page():
-    respond = requests.get('http://www.afisha.ru/msk/schedule_cinema/')
-    return respond
+    response = requests.get('http://www.afisha.ru/msk/schedule_cinema/')
+    return response
 
 
 def parse_afisha_list(raw_html):
@@ -28,32 +28,6 @@ def parse_afisha_list(raw_html):
         title_list.append(i.text.strip().replace('«', '').replace('»', ''))
     mixed_dict = dict(zip(title_list, count_cinemas))
     return mixed_dict
-
-
-def fetch_movie_info(movie_title, proxies):
-    kp_url = 'https://www.kinopoisk.ru/index.php'
-    payload = {'kp_query': movie_title}
-    headers = {
-        'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:45.0) '
-            'Gecko/20100101 Firefox/42.0',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'ru-RU,ru;q=0.8,en-US;q=0.6,en;q=0.4'
-    }
-    proxy = {"http": random.choice(proxies)}
-    print(proxy)
-    print(movie_title)
-    raw_search_info = requests.get(
-        kp_url,
-        params=payload,
-        headers=headers,
-        proxies=proxy
-    )
-    soup = BeautifulSoup(raw_search_info.text, 'html.parser')
-    try:
-        return soup.find('a', text=movie_title)['data-id']
-    except TypeError:
-        return soup.find('a', {'data-title': movie_title})['data-id']
 
 
 def get_movie_rating(movie_title, proxies):
@@ -89,19 +63,6 @@ def get_element(element):
     return float(element[2])
 
 
-def output_movies_to_console_dict(movie_dict):
-    val_list = movie_dict.values()
-    sorted_val = reversed(sorted(val_list, key=get_element))
-    for val in sorted_val:
-        for movie, info in movie_dict.items():
-            if info == val:
-                print('-' * 25)
-                print('movie_title: {}'.format(movie), '\n',
-                      'count_of_cinema: {}'.format(info[0]), '\n',
-                      'rating: {}'.format(info[1]), '\n',
-                      'votes_count: {}'.format(info[2]))
-
-
 def output_movies_to_console(movie_list, top):
     sorted_list = sorted(movie_list, key=get_element, reverse=True)
     delimiter = '-' * 30
@@ -114,11 +75,11 @@ def output_movies_to_console(movie_list, top):
 
 
 if __name__ == '__main__':
-    content = fetch_afisha_page()
-    titles = parse_afisha_list(content)
-    proxies = fetch_proxy()
+    afisha_content = fetch_afisha_page()
+    cinema_count_and_titles_dict = parse_afisha_list(afisha_content)
+    proxies = fetch_proxy_list()
     movie_list = []
-    for movie, count_of_cinema in titles.items():
+    for movie, count_of_cinema in cinema_count_and_titles_dict.items():
         rating_ball, rating_count = get_movie_rating(movie, proxies)
         movies = [movie, count_of_cinema, rating_ball, rating_count]
         movie_list.append(movies)
