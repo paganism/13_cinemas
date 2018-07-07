@@ -3,7 +3,12 @@
 Script shows top popular movies in cinemas with rating on kinopoisk. Movies are sorted by rating
 
 # Usage Example
+
+First install requirements. Do the following:
+```
 pip3 install -r requirements.txt
+```
+After that it is possible to run script:
 ```
 [user@server]$ python3.5 cinemas.py
 ------------------------------
