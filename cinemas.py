@@ -13,11 +13,11 @@ def fetch_proxy_list():
 
 def fetch_afisha_page_data():
     response = requests.get('http://www.afisha.ru/msk/schedule_cinema/')
-    return response
+    return response.text
 
 
 def fetch_cinema_count_and_titles_dict(raw_html):
-    soup = BeautifulSoup(raw_html.text, 'html.parser')
+    soup = BeautifulSoup(raw_html, 'html.parser')
     cinemas = soup.find(class_='cards cards-grid')
     count_cinemas = []
     for item in cinemas.find_all('div', {'itemprop': "address"}):
